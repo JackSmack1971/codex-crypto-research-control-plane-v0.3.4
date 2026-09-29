@@ -105,6 +105,45 @@ Canonical Cloud command (its output is replay evidence only and it exits nonzero
 python3.12 -B scripts/control_plane/qualify_replay.py
 ```
 
+## Live-capture parity (provider-free replay)
+
+A completed local live run may be exported only after its `COMPLETE` or eligible
+`DEGRADED` acquisition is sealed and every required materialization verifies.
+`export_live_replay_bundle.py` copies only the durable datasets, their metadata,
+data-quality and capability summaries, and the deterministic model configuration.
+It records the source pipeline expectations and acquisition identity, but never
+copies authentication material or treats a copied request-ledger identity as
+replay-side compliance.
+
+```text
+LOCAL LIVE ACQUISITION -> sealed durable evidence -> immutable replay bundle
+    -> CODEX CLOUD -> provider-free deterministic replay -> parity comparison
+```
+
+The portable manifest uses POSIX logical paths and a canonical bundle digest.
+Replay verifies its complete inventory before execution. Pipeline-result output
+locations and forecast source locations are classified as environment-specific
+provenance and compared as canonical basenames; all other pipeline bytes are
+semantically deterministic and must match. The injected `created_at` is
+time-specific provenance fixed by the source capture and must also match.
+
+```bash
+# Local, after the eligible live artifacts exist (explicit paths remain available):
+python scripts/control_plane/export_live_replay_bundle.py --attempt-id ATTEMPT \
+  --created-at 2026-09-29T01:00:00Z --out research/replay-bundles/ATTEMPT
+# Cloud, without Massive MCP or network/provider calls:
+python3.12 -B scripts/control_plane/qualify_replay.py \
+  --bundle research/replay-bundles/ATTEMPT
+```
+
+Evidence levels are strictly non-transitive: (1) unit/static validation, (2)
+synthetic `OFFLINE_REPLAY`, (3) `LIVE_CAPTURE_REPLAY_MATCH` deterministic parity,
+(4) live-provider qualification on an authenticated supported runtime, and (5)
+a governed `LIVE_DAILY_RUN` terminal result. No lower level establishes a higher
+one. In particular, level 3 has zero replay provider requests and cannot establish
+provider access, authentication, entitlement, request compliance, or
+`LIVE_PROVIDER_QUALIFIED`.
+
 ## Attempt lineage
 
 `run_id` identifies the stable research date; every retry receives a new `attempt_id`. Prior terminal artifacts are never overwritten. Release packages intentionally ship no date-specific runtime research artifacts.

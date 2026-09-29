@@ -29,7 +29,7 @@ SCHEMAS = [
     "materialized_dataset.schema.json", "daily_pipeline_result.schema.json",
     "massive_request_ledger.schema.json",
     "windows_bootstrap.schema.json", "linux_bootstrap.schema.json", "python_runtime.schema.json",
-    "replay_fixture.schema.json", "replay_qualification.schema.json",
+    "replay_fixture.schema.json", "replay_qualification.schema.json", "live_replay_bundle.schema.json",
 ]
 TRANSIENT_PARTS = {"__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache", ".runtime"}
 TRANSIENT_SUFFIXES = {".pyc", ".pyo", ".tmp", ".swp"}
