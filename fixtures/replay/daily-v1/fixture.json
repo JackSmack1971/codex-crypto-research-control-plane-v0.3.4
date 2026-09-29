@@ -1,0 +1,49 @@
+{
+  "attempt_id": "replay-daily-v1-attempt",
+  "capability_evaluation": "capability-evaluation.json",
+  "created_at": "2026-09-29T00:05:00Z",
+  "data_quality": "data-quality.json",
+  "datasets": [
+    {
+      "data_digest": "sha256:c3d376983c043b62477caa7c570abcad745f644c1ea5af98de7ab939be1e6f61",
+      "data_path": "crypto_universe.jsonl",
+      "metadata_digest": "sha256:e23858d668aa806b3c63510f792f60eafbd4f69d10fc19b12b47fb82cfdadcfe",
+      "metadata_path": "crypto_universe.meta.json",
+      "role": "crypto_universe",
+      "row_count": 6
+    },
+    {
+      "data_digest": "sha256:1c576c38215008cccd7c43d42ae7fb7a35bf5f7a541adc36b7f24e7f9e74dc35",
+      "data_path": "crypto_cutoff.jsonl",
+      "metadata_digest": "sha256:b3065b2d989a318d0e314a5f8598b2c2e4d7d3f47f00ea837cddc9504b8a55dd",
+      "metadata_path": "crypto_cutoff.meta.json",
+      "role": "crypto_cutoff",
+      "row_count": 6
+    },
+    {
+      "data_digest": "sha256:fb9ed09f424f999fb45e18a12cae3d8e7c574286be02694ed8d87e716ab17211",
+      "data_path": "crypto_history.jsonl",
+      "metadata_digest": "sha256:a376d8918982fc0d9bf0e51301056541a1a2861994730d2bed55b13d729f6911",
+      "metadata_path": "crypto_history.meta.json",
+      "role": "crypto_history",
+      "row_count": 390
+    }
+  ],
+  "description": "Deterministic synthetic post-MCP materialization vectors; not provider evidence and not representative of real markets.",
+  "expected_pipeline_digests": {
+    "ensemble.json": "sha256:dcad4b662197d3b86f63eb35750a050274198fdca4accc972203c7f496d68c9a",
+    "factors.json": "sha256:51ad4fdc5ad68930da0f295d68534b945323f03299c506f84108a130353c446c",
+    "feature-store.jsonl": "sha256:85b24640ccb756d34e0f300c9175ad7fe2a2e6c65deafaab6277d7f3ca5213a0",
+    "forecast-payload.json": "sha256:9567940d417b4e3b89fa07128a6c79c4bc46e5df723db5c607a3baff1d44b592",
+    "macro-regime.json": "sha256:d6c96fe15eaa03ccd0ac88c39fdb5f9f7d1ae3240e9f4f18075f9a1879e98d07",
+    "market-state.json": "sha256:c2e20fa0558b495dec7cee193623e890b61c0a3fd38d4574d754fabfc956b3f4",
+    "pipeline-result.json": "sha256:2714995c322d20ec349fed03e370dae0ce6076b9540837030ba124015b007248",
+    "relative-value.json": "sha256:e1b393cc27353e46a797a424dd09ce07c594f3e2ebcb9f729594b040e5d6eef8",
+    "risk.json": "sha256:7dd269c838bcdb7dcdbb53a3246d1c110912b4091310f0e7cf570498acbc59fb"
+  },
+  "fixture_id": "daily-post-mcp-synthetic",
+  "fixture_version": 1,
+  "provenance": "SYNTHETIC",
+  "research_cutoff": "2026-09-28T23:59:59Z",
+  "run_id": "replay-daily-v1"
+}

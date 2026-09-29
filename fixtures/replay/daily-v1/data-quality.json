@@ -1,0 +1,13 @@
+{
+  "cutoff": "2026-09-28T23:59:59Z",
+  "datasets": [
+    "crypto_universe",
+    "crypto_cutoff",
+    "crypto_history"
+  ],
+  "findings": [
+    "Offline replay fixture contains verified synthetic crypto core only; macro enrichment is unavailable."
+  ],
+  "run_id": "replay-daily-v1",
+  "status": "DEGRADED"
+}

@@ -29,6 +29,7 @@ SCHEMAS = [
     "materialized_dataset.schema.json", "daily_pipeline_result.schema.json",
     "massive_request_ledger.schema.json",
     "windows_bootstrap.schema.json", "linux_bootstrap.schema.json", "python_runtime.schema.json",
+    "replay_fixture.schema.json", "replay_qualification.schema.json",
 ]
 TRANSIENT_PARTS = {"__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache", ".runtime"}
 TRANSIENT_SUFFIXES = {".pyc", ".pyo", ".tmp", ".swp"}
@@ -266,6 +267,7 @@ def main() -> int:
         "scripts/control_plane/preflight.py", "scripts/control_plane/discover_run.py",
         "scripts/control_plane/evaluate_capabilities.py", "scripts/control_plane/materialize_mcp_dataset.py",
         "scripts/control_plane/massive_request_gate.py",
+        "scripts/control_plane/qualify_replay.py",
         "scripts/control_plane/bootstrap.ps1",
         "scripts/control_plane/bootstrap.sh",
         "scripts/control_plane/validate_artifact.py", "scripts/control_plane/run_python.ps1", "scripts/control_plane/run_python.sh", "scripts/control_plane/run_tests.py", "scripts/pipeline/run_daily_pipeline.py",

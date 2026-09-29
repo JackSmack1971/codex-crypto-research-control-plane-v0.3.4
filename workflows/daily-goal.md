@@ -1,5 +1,7 @@
 # Daily `/goal`
 
+This workflow is the live provider path. Offline deterministic qualification uses `python3.12 -B scripts/control_plane/qualify_replay.py`; its `OFFLINE_REPLAY` artifact cannot satisfy any capability-probe, request-ledger, acquisition-provenance, methodology-audit, or forecast-freeze requirement below.
+
 Use one stable daily `run_id` and a fresh `attempt_id` for every retry.
 
 ```text

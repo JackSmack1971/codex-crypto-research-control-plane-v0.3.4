@@ -295,6 +295,7 @@ def main() -> int:
     ap.add_argument("--capability-evaluation", required=True)
     ap.add_argument("--config", default="config/daily-model.json")
     ap.add_argument("--out-dir", default="research/pipeline")
+    ap.add_argument("--created-at", help="Fixed forecast-payload creation time for deterministic replay qualification.")
     args = ap.parse_args()
 
     try:
@@ -442,7 +443,7 @@ def main() -> int:
         _write_new_json(Path(artifacts["macro_regime"]), macro)
         _write_new_json(Path(artifacts["ensemble"]), {"assets": factor_rows, "regime_multiplier": regime_multiplier})
         _write_new_json(Path(artifacts["risk"]), risk)
-        created_at = datetime.now(cutoff.tzinfo).isoformat().replace("+00:00", "Z")
+        created_at = args.created_at or datetime.now(cutoff.tzinfo).isoformat().replace("+00:00", "Z")
         forecast_payload = {
             "forecast_id": f"{args.attempt_id}-next-day-v1",
             "run_id": args.run_id,

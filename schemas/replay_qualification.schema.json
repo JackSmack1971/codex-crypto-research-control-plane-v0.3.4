@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["qualification_mode", "status", "fixture", "fixture_digests", "control_plane_source", "python_runtime", "stages", "artifact_digests", "live_provider_qualified", "live_daily_run_pass", "provider_checks", "limitations"],
+  "properties": {
+    "qualification_mode": {"const": "OFFLINE_REPLAY"},
+    "status": {"enum": ["PASS", "BLOCKED"]},
+    "fixture": {"type": "object"},
+    "fixture_digests": {"type": "object"},
+    "control_plane_source": {"type": "object"},
+    "python_runtime": {"type": "object"},
+    "stages": {"type": "array", "minItems": 1, "items": {"type": "object"}},
+    "artifact_digests": {"type": "object"},
+    "live_provider_qualified": {"const": false},
+    "live_daily_run_pass": {"const": false},
+    "provider_checks": {
+      "type": "object", "additionalProperties": false,
+      "required": ["massive_mcp_visibility", "authentication", "entitlement", "effective_capability_probe", "live_request_ledger", "live_acquisition"],
+      "properties": {
+        "massive_mcp_visibility": {"const": "NOT_TESTED"}, "authentication": {"const": "NOT_TESTED"},
+        "entitlement": {"const": "NOT_TESTED"}, "effective_capability_probe": {"const": "NOT_TESTED"},
+        "live_request_ledger": {"const": "NOT_TESTED"}, "live_acquisition": {"const": "NOT_TESTED"}
+      }
+    },
+    "limitations": {"type": "array", "minItems": 1, "items": {"type": "string"}}
+  }
+}
