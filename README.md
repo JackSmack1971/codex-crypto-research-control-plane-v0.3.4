@@ -50,7 +50,17 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\control_plane\run_
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\control_plane\run_python.ps1 .\scripts\control_plane\run_tests.py
 ```
 
+On Linux/Codex Cloud, use the native wrapper:
+
+```bash
+scripts/control_plane/run_python.sh scripts/control_plane/validate_control_plane.py
+scripts/control_plane/run_python.sh scripts/control_plane/validate_evals.py
+scripts/control_plane/run_python.sh scripts/control_plane/run_tests.py
+```
+
 For a live daily attempt on Windows, the first executable control is `scripts/control_plane/bootstrap.ps1`, not Python. It performs the minimum pre-acquisition checks and attempt discovery without Python, writes a durable bootstrap record even on failure, and resolves a real Python 3.11+ interpreter. `run_python.ps1` now enumerates repo `.venv`, versioned `py` launchers, the Windows Python registry, common CPython/Conda/Scoop locations, uv-managed installs recursively, all PATH/`where.exe` candidates, and `uv python find`. Any successful launcher is rebound to the actual `sys.executable`. If none works, bootstrap may provision CPython 3.12 only into the repository-local `.runtime/python` directory via uv; it does not alter system PATH or perform a global Python install. Acquisition remains forbidden until the resolved executable proves Python >=3.11.
+
+For a live daily attempt on Linux/Codex Cloud, the corresponding first control is `scripts/control_plane/bootstrap.sh`, followed exclusively by `scripts/control_plane/run_python.sh --runtime-file <attempt-runtime.json>`. Linux discovery covers attempt-bound descriptors, repo virtualenvs, concrete versioned commands, pyenv, uv-managed installations, PATH, and `uv python find`, and similarly rebinds shims to the concrete `sys.executable`. It uses the same bounded repo-local repair policy and writes BLOCKED evidence before any provider call when no runtime can be bound.
 
 After bootstrap is READY, every deterministic Python stage is invoked through the attempt-bound runtime descriptor. The daily workflow then initializes the attempt-scoped Massive provider-request ledger, deterministically paces every provider-facing `call_api`, materializes MCP results durably, runs the deterministic pipeline, delegates analytical review, and freezes the forecast only if the mandatory gates permit it.
 
@@ -113,6 +123,7 @@ The repository now contains the full operational spine that the first live quali
 
 - `bootstrap.ps1` performs the Windows pre-acquisition bootstrap without Python, records source/prior-attempt/writability evidence, resolves a real Python 3.11+ interpreter, and may provision a disposable repo-local CPython 3.12 under `.runtime/python` before failing;
 - `run_python.ps1` binds deterministic scripts to that resolved executable, records every failed candidate probe, scans the Windows registry/uv installs/PATH comprehensively, and never falls back to an unverified shim;
+- `bootstrap.sh` and `run_python.sh` provide the additive Linux/Codex Cloud path with equivalent attempt evidence, concrete `sys.executable` rebinding, revalidation, and bounded repo-local provisioning;
 - `preflight.py` performs the deeper Python-stage readiness check once the governed runtime has been resolved;
 - `massive_request_gate.py` serializes provider-facing Massive `call_api` starts, enforces the configured rolling rate budget, records an auditable request ledger, taints the attempt on any rate-limit response, and seals only compliant ledgers;
 - `evaluate_capabilities.py` applies CORE / ENRICHMENT / EVENT_OPTIONAL policy to authenticated MCP probes;
@@ -133,7 +144,7 @@ This is a research-state/data-integrity gate, not a Codex permission boundary.
 
 - `config/daily-capabilities.json` defines which Massive capabilities are CORE, ENRICHMENT, or EVENT_OPTIONAL.
 - `config/daily-model.json` fixes the initial operational universe/history/factor-weight parameters (top 25 liquid USD pairs, 120-calendar-day requested history, >=60 observations, robust rank weights).
-- `config/python-runtime-policy.json` declares the minimum deterministic runtime and forbids automatic runtime installation by the control plane.
+- `config/python-runtime-policy.json` declares the minimum deterministic runtime and confines any authorized automatic repair to the repository-local runtime directory.
 - `config/massive-request-policy.json` makes provider pacing executable policy rather than prompt advice. The default is five `call_api` starts per rolling 60 seconds, minimum 12 seconds apart, serial completion, and new-attempt recovery after a rate-limit response.
 - Release packages intentionally contain no date-specific run/acquisition/forecast artifacts. Each retry receives a new `attempt_id` under one stable daily `run_id`.
 

@@ -31,7 +31,7 @@ This avoids treating provider/account entitlement mismatch as either permission 
 ```text
 stable daily run_id + fresh attempt_id
         |
-Windows-native bootstrap / runtime resolution
+platform-native bootstrap / runtime resolution
 (no Python dependency; durable BLOCKED evidence if unavailable)
         |
 bound deterministic Python runtime
@@ -77,7 +77,7 @@ deterministic daily pipeline
                           later OOS scorekeeping
 ```
 
-On Windows, bare `python` is never the bootstrap authority: native PowerShell resolves and binds an executable runtime first. A transient Massive workspace is never the governed data record. Agent prose is never the deterministic calculation authority. A provider-rate rule that must hold is enforced by the request gate and rechecked before forecast freeze; prompt-level pacing judgment is not sufficient evidence.
+Bare `python` is never the bootstrap authority. Native PowerShell on Windows or Bash on Linux resolves and binds an executable runtime first. A transient Massive workspace is never the governed data record. Agent prose is never the deterministic calculation authority. A provider-rate rule that must hold is enforced by the request gate and rechecked before forecast freeze; prompt-level pacing judgment is not sufficient evidence.
 
 ## Two-phase crypto core
 
@@ -111,3 +111,7 @@ No agent recommendation or MCP result is itself a state transition.
 ## Windows runtime bootstrap hardening
 
 On Windows, provider acquisition is downstream of a Python-independent PowerShell bootstrap. Repository paths resolve from the active project root, never the installed Skill directory. The resolver records every candidate outcome, checks repo virtualenv/Windows registry/common installs/uv/PATH, rebinds launchers to the actual interpreter executable, and may provision only a repository-local CPython under `.runtime/python` via uv. No system PATH mutation or global Python installation is permitted. Massive calls remain forbidden until Python >=3.11 executes successfully and the runtime descriptor is persisted.
+
+## Linux runtime bootstrap hardening
+
+On Linux/Codex Cloud, provider acquisition is downstream of the Python-independent `bootstrap.sh`. Its resolver records every candidate outcome, checks an attempt-bound descriptor, repo virtualenvs, concrete versioned commands, pyenv, uv-managed installs, PATH, and uv discovery, then rebinds any launcher or shim to `sys.executable`. `run_python.sh` revalidates that concrete executable before every governed stage. The same repo-local `.runtime/python` provisioning boundary applies, and Massive calls remain forbidden until READY bootstrap and runtime evidence are persisted and validated.

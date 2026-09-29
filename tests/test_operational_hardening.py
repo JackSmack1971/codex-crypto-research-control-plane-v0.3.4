@@ -1,6 +1,7 @@
 import csv
 import hashlib
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -49,6 +50,99 @@ def write_materialized(root: Path, attempt: str, dataset_id: str, rows: list[dic
 
 
 class OperationalHardeningTests(unittest.TestCase):
+
+    def test_linux_bootstrap_runtime_files_are_present_and_routed(self):
+        bootstrap = CONTROL / "bootstrap.sh"
+        resolver = CONTROL / "run_python.sh"
+        self.assertTrue(os.access(bootstrap, os.X_OK))
+        self.assertTrue(os.access(resolver, os.X_OK))
+        bootstrap_text = bootstrap.read_text(encoding="utf-8")
+        resolver_text = resolver.read_text(encoding="utf-8")
+        self.assertIn('"$SCRIPT_DIR/run_python.sh" --probe-only', bootstrap_text)
+        self.assertIn("massive_effective_access_probe_required", bootstrap_text)
+        self.assertIn('exec "$resolved" -B "$script"', resolver_text)
+        self.assertNotIn("MASSIVE_" + "API_KEY", bootstrap_text + resolver_text)
+        self.assertNotIn("curl ", bootstrap_text + resolver_text)
+
+    def test_linux_path_shim_is_rebound_to_sys_executable(self):
+        with tempfile.TemporaryDirectory() as td:
+            td = Path(td)
+            shim = td / "python3.12"
+            shim.write_text(f"#!/usr/bin/env bash\nexec {sys.executable!r} \"$@\"\n", encoding="utf-8")
+            shim.chmod(0o755)
+            descriptor = td / "runtime.json"
+            proc = subprocess.run(
+                ["bash", str(CONTROL / "run_python.sh"), "--probe-only", "--runtime-out", str(descriptor), "--test-candidate", str(shim)],
+                cwd=ROOT, text=True, capture_output=True,
+            )
+            self.assertEqual(0, proc.returncode, proc.stdout + proc.stderr)
+            runtime = json.loads(descriptor.read_text(encoding="utf-8"))
+            self.assertEqual("READY", runtime["status"])
+            self.assertEqual("linux", runtime["platform"])
+            self.assertEqual(str(Path(sys.executable).resolve()), str(Path(runtime["resolved_executable"]).resolve()))
+            self.assertNotEqual(str(shim), runtime["resolved_executable"])
+
+    def test_linux_runtime_rejects_old_python_and_records_blocked_evidence(self):
+        with tempfile.TemporaryDirectory() as td:
+            td = Path(td)
+            old = td / "python-old"
+            old.write_text("#!/usr/bin/env bash\nprintf 'CODEX_RUNTIME\\t%s\\t3.10.14\\n' \"$0\"\n", encoding="utf-8")
+            old.chmod(0o755)
+            descriptor = td / "runtime.json"
+            proc = subprocess.run(
+                ["bash", str(CONTROL / "run_python.sh"), "--probe-only", "--runtime-out", str(descriptor), "--test-candidate", str(old)],
+                cwd=ROOT, text=True, capture_output=True,
+            )
+            self.assertEqual(127, proc.returncode, proc.stdout + proc.stderr)
+            runtime = json.loads(descriptor.read_text(encoding="utf-8"))
+            self.assertEqual("BLOCKED", runtime["status"])
+            self.assertEqual("linux", runtime["platform"])
+            self.assertEqual("TOO_OLD", runtime["probes"][0]["status"])
+            self.assertFalse(runtime["provisioning_attempted"])
+
+    def test_linux_missing_runtime_records_blocked_evidence(self):
+        with tempfile.TemporaryDirectory() as td:
+            descriptor = Path(td) / "runtime.json"
+            missing = Path(td) / "does-not-exist"
+            proc = subprocess.run(
+                ["bash", str(CONTROL / "run_python.sh"), "--probe-only", "--runtime-out", str(descriptor), "--test-candidate", str(missing)],
+                cwd=ROOT, text=True, capture_output=True,
+            )
+            self.assertEqual(127, proc.returncode, proc.stdout + proc.stderr)
+            runtime = json.loads(descriptor.read_text(encoding="utf-8"))
+            self.assertEqual("BLOCKED", runtime["status"])
+            self.assertEqual("NOT_FOUND", runtime["probes"][0]["status"])
+
+    def test_linux_bound_runtime_failure_never_falls_back_to_path_python(self):
+        with tempfile.TemporaryDirectory() as td:
+            td = Path(td)
+            bound = td / "bound.json"
+            bound.write_text(json.dumps({"status": "READY", "resolved_executable": str(td / "missing-python")}), encoding="utf-8")
+            evidence = td / "recheck.json"
+            proc = subprocess.run(
+                ["bash", str(CONTROL / "run_python.sh"), "--runtime-file", str(bound), "--probe-only", "--runtime-out", str(evidence)],
+                cwd=ROOT, text=True, capture_output=True,
+            )
+            self.assertEqual(127, proc.returncode, proc.stdout + proc.stderr)
+            runtime = json.loads(evidence.read_text(encoding="utf-8"))
+            self.assertEqual("BLOCKED", runtime["status"])
+            self.assertEqual(["runtime_file"], [probe["source"] for probe in runtime["probes"]])
+
+    def test_linux_provisioning_is_bounded_to_configured_repo_runtime(self):
+        policy = json.loads((ROOT / "config" / "python-runtime-policy.json").read_text(encoding="utf-8"))
+        resolver = (CONTROL / "run_python.sh").read_text(encoding="utf-8")
+        self.assertEqual(".runtime/python", policy["repo_runtime_dir"])
+        self.assertEqual("REPO_LOCAL_ONLY", policy["auto_install_scope"])
+        self.assertIn('case "$target" in "$ROOT"/*)', resolver)
+        self.assertIn('--install-dir "$target" --no-bin --no-config', resolver)
+        self.assertIn("UV_PYTHON_INSTALL_REGISTRY=0", resolver)
+        self.assertIn("UV_PYTHON_INSTALL_BIN=0", resolver)
+
+    def test_linux_workflow_forbids_bare_python_after_runtime_binding(self):
+        workflow = (ROOT / "workflows" / "daily-goal.md").read_text(encoding="utf-8")
+        self.assertIn("bootstrap.sh", workflow)
+        self.assertIn("run_python.sh", workflow)
+        self.assertIn("Do not revert to bare `python` or `python3`", workflow)
 
 
     def test_windows_bootstrap_policy_has_bounded_repo_local_repair_and_diagnostics(self):

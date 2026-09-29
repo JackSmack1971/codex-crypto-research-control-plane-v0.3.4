@@ -43,9 +43,13 @@ Once the target horizon matures, scorekeeping writes a separate outcome artifact
 
 ## Bootstrap state
 
-A daily attempt begins in a platform bootstrap state before any provider request is permitted. On Windows, `bootstrap.ps1` is authoritative for this step because it does not require Python. It writes an attempt-scoped bootstrap artifact whether the runtime probe succeeds or fails. `READY` binds the attempt to a tested Python 3.11+ runtime descriptor; `BLOCKED` forbids Massive acquisition. The control plane never converts a missing runtime into permission to improvise calculations or install software automatically.
+A daily attempt begins in a platform bootstrap state before any provider request is permitted. Native `bootstrap.ps1` on Windows and `bootstrap.sh` on Linux are authoritative for this step because neither requires Python for its initial controls. Each writes an attempt-scoped bootstrap artifact whether the runtime probe succeeds or fails. `READY` binds the attempt to a tested Python 3.11+ runtime descriptor; `BLOCKED` forbids Massive acquisition. The control plane never converts a missing runtime into permission to improvise calculations or install software outside the bounded repository-local policy.
 
 
 ## Windows runtime bootstrap hardening
 
 On Windows, provider acquisition is downstream of a Python-independent PowerShell bootstrap. Repository paths resolve from the active project root, never the installed Skill directory. The resolver records every candidate outcome, checks repo virtualenv/Windows registry/common installs/uv/PATH, rebinds launchers to the actual interpreter executable, and may provision only a repository-local CPython under `.runtime/python` via uv. No system PATH mutation or global Python installation is permitted. Massive calls remain forbidden until Python >=3.11 executes successfully and the runtime descriptor is persisted.
+
+## Linux runtime bootstrap hardening
+
+On Linux/Codex Cloud, `bootstrap.sh` performs the corresponding Python-independent checks and `run_python.sh` resolves and revalidates the concrete interpreter. Versioned PATH or pyenv shims are evidence sources only: the descriptor and every governed execution use the probed `sys.executable`. Provisioning, when required and permitted, remains confined to `.runtime/python`; a failed binding produces BLOCKED evidence and authorizes no provider calls.
