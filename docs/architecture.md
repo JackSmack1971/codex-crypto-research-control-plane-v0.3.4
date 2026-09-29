@@ -83,6 +83,28 @@ Bare `python` is never the bootstrap authority. Native PowerShell on Windows or 
 
 The first MCP phase fixes the PIT universe and cutoff-day cross-section. Deterministic code then selects the configured liquid USD universe. The second phase retrieves the historical lookback only for that fixed eligible set plus BTC/ETH anchors. This keeps the daily acquisition bounded while preserving a proper historical feature/residual model.
 
+## Offline replay qualification
+
+Codex Cloud may qualify the deterministic post-acquisition path from the repository-owned, versioned fixture under `fixtures/replay/`. Replay begins at verified durable materialization—not at provider transport—and rechecks fixture/schema bindings, SHA-256 digests, row counts, unique keys, cutoff compliance, data quality, pipeline output schemas, and fixed output digests. The fixture is explicitly synthetic and includes unavailable enrichment so it cannot support claims about real markets.
+
+`scripts/control_plane/qualify_replay.py` writes a dedicated `OFFLINE_REPLAY` qualification artifact. It does not probe Massive, authenticate, establish entitlement, create provider request evidence, seal a Massive acquisition manifest, run a methodology audit, or freeze a live forecast. Consequently, replay PASS can never mean `LIVE_PROVIDER_QUALIFIED` or `LIVE_DAILY_RUN_PASS`.
+
+| Execution evidence | Cloud replay | Local live |
+|---|---:|---:|
+| Massive MCP | NO | YES |
+| Provider OAuth | NO | YES |
+| Real acquisition | NO | YES |
+| Deterministic code | YES | YES |
+| Research schemas | YES | YES |
+| Replay qualified | YES | optional |
+| Live qualified | NO | YES |
+
+Canonical Cloud command (its output is replay evidence only and it exits nonzero on failure):
+
+```bash
+python3.12 -B scripts/control_plane/qualify_replay.py
+```
+
 ## Attempt lineage
 
 `run_id` identifies the stable research date; every retry receives a new `attempt_id`. Prior terminal artifacts are never overwritten. Release packages intentionally ship no date-specific runtime research artifacts.

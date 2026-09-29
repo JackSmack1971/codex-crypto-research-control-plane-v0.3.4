@@ -1,0 +1,25 @@
+{
+  "as_of": "2026-09-28",
+  "attempt_id": "replay-daily-v1-attempt",
+  "data_digest": "sha256:c3d376983c043b62477caa7c570abcad745f644c1ea5af98de7ab939be1e6f61",
+  "data_path": "crypto_universe.jsonl",
+  "dataset_id": "crypto_universe",
+  "endpoint_path": "/offline-replay/post-mcp-materialization",
+  "key_fields": [
+    "ticker"
+  ],
+  "market": "Crypto",
+  "materialization_status": "VERIFIED",
+  "params": {
+    "fixture": "daily-v1"
+  },
+  "requirement": "CORE",
+  "research_cutoff": "2026-09-28T23:59:59Z",
+  "retrieved_at": "2026-09-29T00:00:00Z",
+  "row_count": 6,
+  "run_id": "replay-daily-v1",
+  "sort_fields": [
+    "ticker"
+  ],
+  "source_chunks": []
+}

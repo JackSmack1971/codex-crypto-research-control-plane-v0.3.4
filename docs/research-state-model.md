@@ -41,6 +41,10 @@ A forecast is created before its target outcome exists and written immutably to 
 
 Once the target horizon matures, scorekeeping writes a separate outcome artifact under `research/outcomes/` that binds to the forecast ID and digest. Never rewrite the original forecast with realized results. If the repository has no authoritative deterministic scorer for the registered metric, scorekeeping is inconclusive rather than model-invented.
 
+## Replay qualification state
+
+`OFFLINE_REPLAY` is a separate qualification mode, not a daily-run or provider state. A replay PASS proves only that a fixed, explicitly labelled fixture passed durable-materialization checks and the deterministic downstream code reproduced its expected artifacts. It never transitions a daily attempt to provider-qualified, never satisfies authenticated capability probes or request-ledger gates, and is not eligible for the live forecast freeze transition.
+
 ## Bootstrap state
 
 A daily attempt begins in a platform bootstrap state before any provider request is permitted. Native `bootstrap.ps1` on Windows and `bootstrap.sh` on Linux are authoritative for this step because neither requires Python for its initial controls. Each writes an attempt-scoped bootstrap artifact whether the runtime probe succeeds or fails. `READY` binds the attempt to a tested Python 3.11+ runtime descriptor; `BLOCKED` forbids Massive acquisition. The control plane never converts a missing runtime into permission to improvise calculations or install software outside the bounded repository-local policy.

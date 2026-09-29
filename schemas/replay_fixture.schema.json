@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["fixture_id", "fixture_version", "provenance", "description", "run_id", "attempt_id", "research_cutoff", "created_at", "datasets", "data_quality", "capability_evaluation", "expected_pipeline_digests"],
+  "properties": {
+    "fixture_id": {"type": "string", "minLength": 1},
+    "fixture_version": {"type": "integer", "minimum": 1},
+    "provenance": {"enum": ["SYNTHETIC", "SANITIZED_LIVE_CAPTURE", "FIXED_TEST_VECTOR"]},
+    "description": {"type": "string", "minLength": 1},
+    "run_id": {"type": "string", "minLength": 1},
+    "attempt_id": {"type": "string", "minLength": 1},
+    "research_cutoff": {"type": "string", "format": "date-time"},
+    "created_at": {"type": "string", "format": "date-time"},
+    "datasets": {
+      "type": "array", "minItems": 3,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["role", "data_path", "metadata_path", "data_digest", "metadata_digest", "row_count"],
+        "properties": {
+          "role": {"enum": ["crypto_universe", "crypto_cutoff", "crypto_history", "fx_history", "stock_history", "index_history"]},
+          "data_path": {"type": "string", "minLength": 1},
+          "metadata_path": {"type": "string", "minLength": 1},
+          "data_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+          "metadata_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+          "row_count": {"type": "integer", "minimum": 0}
+        }
+      }
+    },
+    "data_quality": {"type": "string", "minLength": 1},
+    "capability_evaluation": {"type": "string", "minLength": 1},
+    "expected_pipeline_digests": {"type": "object"}
+  }
+}

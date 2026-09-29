@@ -1,0 +1,20 @@
+{
+  "attempt_id": "replay-daily-v1-attempt",
+  "core_failures": [],
+  "degradations": [
+    "offline_replay:provider_capabilities_NOT_TESTED",
+    "macro_enrichment:UNAVAILABLE"
+  ],
+  "evaluated_capabilities": [
+    {
+      "authenticated_access": "NOT_TESTED",
+      "live_provider_qualified": false,
+      "scope": "OFFLINE_REPLAY"
+    }
+  ],
+  "optional_unavailable": [
+    "events:NOT_TESTED"
+  ],
+  "run_id": "replay-daily-v1",
+  "status": "DEGRADED"
+}
