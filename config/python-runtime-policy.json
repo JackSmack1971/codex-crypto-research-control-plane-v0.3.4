@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "minimum_version": "3.11",
   "preferred_provision_version": "3.12",
   "allow_runtime_file": true,
@@ -16,6 +16,7 @@
   "repo_runtime_dir": ".runtime/python",
   "notes": [
     "Windows bootstrap must not depend on Python in order to discover and record Python runtime availability.",
+    "Linux bootstrap must not depend on Python in order to discover and record Python runtime availability.",
     "All successful discovery paths are rebound to the resolved interpreter executable; later governed stages do not execute through py.exe, PATH python shims, or uv run.",
     "If no existing Python 3.11+ interpreter executes and uv itself is available, bootstrap may provision CPython into the repository-local .runtime/python directory. This bounded repair does not modify system PATH and is excluded from source control.",
     "uv locator and install behavior follows uv's documented Python discovery/install interfaces. Provider acquisition remains forbidden until the resolved interpreter executes successfully.",

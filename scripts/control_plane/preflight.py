@@ -20,6 +20,8 @@ REQUIRED_FILES = [
     "config/python-runtime-policy.json",
     "scripts/control_plane/bootstrap.ps1",
     "scripts/control_plane/run_python.ps1",
+    "scripts/control_plane/bootstrap.sh",
+    "scripts/control_plane/run_python.sh",
     "scripts/control_plane/run_tests.py",
     "scripts/control_plane/materialize_mcp_dataset.py",
     "scripts/control_plane/massive_request_gate.py",

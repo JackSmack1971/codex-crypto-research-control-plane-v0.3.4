@@ -28,7 +28,7 @@ SCHEMAS = [
     "capability_probe_report.schema.json", "capability_evaluation.schema.json",
     "materialized_dataset.schema.json", "daily_pipeline_result.schema.json",
     "massive_request_ledger.schema.json",
-    "windows_bootstrap.schema.json", "python_runtime.schema.json",
+    "windows_bootstrap.schema.json", "linux_bootstrap.schema.json", "python_runtime.schema.json",
 ]
 TRANSIENT_PARTS = {"__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache", ".runtime"}
 TRANSIENT_SUFFIXES = {".pyc", ".pyo", ".tmp", ".swp"}
@@ -156,6 +156,18 @@ def check_python_network_bypass(errors: list[str]) -> None:
             if needle in text:
                 errors.append(f"direct-network-bypass:{path.relative_to(ROOT).as_posix()}:{label}")
 
+    shell_forbidden = {
+        "MASSIVE_API_KEY": "MASSIVE_API_KEY",
+        "POLYGON_API_KEY": "POLYGON_API_KEY",
+        "curl ": "curl",
+        "wget ": "wget",
+    }
+    for path in ROOT.rglob("*.sh"):
+        text = path.read_text(encoding="utf-8")
+        for needle, label in shell_forbidden.items():
+            if needle in text:
+                errors.append(f"direct-network-bypass:{path.relative_to(ROOT).as_posix()}:{label}")
+
 
 def check_package_hygiene(errors: list[str]) -> None:
     for path in ROOT.rglob("*"):
@@ -255,7 +267,8 @@ def main() -> int:
         "scripts/control_plane/evaluate_capabilities.py", "scripts/control_plane/materialize_mcp_dataset.py",
         "scripts/control_plane/massive_request_gate.py",
         "scripts/control_plane/bootstrap.ps1",
-        "scripts/control_plane/validate_artifact.py", "scripts/control_plane/run_python.ps1", "scripts/control_plane/run_tests.py", "scripts/pipeline/run_daily_pipeline.py",
+        "scripts/control_plane/bootstrap.sh",
+        "scripts/control_plane/validate_artifact.py", "scripts/control_plane/run_python.ps1", "scripts/control_plane/run_python.sh", "scripts/control_plane/run_tests.py", "scripts/pipeline/run_daily_pipeline.py",
         ".agents/skills/massive-basic-endpoints/scripts/endpoint_lookup.ps1",
         "config/daily-capabilities.json", "config/daily-model.json", "config/massive-request-policy.json", "config/python-runtime-policy.json",
     ]
@@ -279,7 +292,7 @@ def main() -> int:
         errors.append(f"invalid-config-toml:{exc}")
 
     agents_text = (ROOT / "AGENTS.md").read_text(encoding="utf-8") if (ROOT / "AGENTS.md").is_file() else ""
-    for phrase in ("Massive MCP", "$massive-mcp-data-plane", "Do not bypass", "bootstrap.ps1", "run_python.ps1"):
+    for phrase in ("Massive MCP", "$massive-mcp-data-plane", "Do not bypass", "bootstrap.ps1", "run_python.ps1", "bootstrap.sh", "run_python.sh"):
         if phrase not in agents_text:
             errors.append(f"agents-missing-massive-policy:{phrase}")
 

@@ -4,9 +4,9 @@ Massive MCP is the authoritative external source plane. Repository code owns dur
 
 ## Operational sequence
 
-### 0. Native Windows bootstrap before acquisition
+### 0. Native platform bootstrap before acquisition
 
-Before spending MCP calls, create a stable `run_id` (for example `2026-09-28-eod`) and a unique immutable `attempt_id` (for example `2026-09-28-eod-attempt-20260929T120000Z`). On Windows, do **not** begin by invoking `python` directly. Run the native bootstrap first:
+Before spending MCP calls, create a stable `run_id` (for example `2026-09-28-eod`) and a unique immutable `attempt_id` (for example `2026-09-28-eod-attempt-20260929T120000Z`). Select the native path for the runtime platform; do **not** begin by invoking `python` directly.
 
 ```powershell
 $Attempt = "2026-09-28-eod-attempt-20260929T120000Z"
@@ -19,7 +19,17 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\control_plane\boot
   -RuntimeOut $Runtime
 ```
 
-The bootstrap itself does not require Python. It checks the required static files, writable research directories, request policy, source identity, Git availability, and prior attempts, and it **always writes** an attempt-scoped bootstrap artifact. It then probes for Python 3.11+ using `py -3`, direct CPython installation paths, PATH commands, and finally `uv python find >=3.11` with automatic downloads disabled. Astral documents `uv python find` as interpreter discovery and `--no-python-downloads` as the switch that prevents automatic Python downloads; the control plane uses uv only as a locator here, never as permission to mutate the machine.
+```bash
+attempt=2026-09-28-eod-attempt-20260929T120000Z
+runtime="research/runs/$attempt.python-runtime.json"
+scripts/control_plane/bootstrap.sh \
+  --run-id 2026-09-28-eod \
+  --attempt-id "$attempt" \
+  --research-cutoff 2026-09-28T23:59:59Z \
+  --runtime-out "$runtime"
+```
+
+The native bootstrap does not require Python for its initial controls. It checks the required static files, writable research directories, request policy, source identity, Git availability, and prior attempts, and it **always writes** an attempt-scoped bootstrap artifact. Platform-specific discovery is evidence-producing and ends by rebinding a successful launcher or shim to its actual `sys.executable`; `uv python find` disables automatic downloads and is discovery rather than permission to mutate the machine.
 
 If an existing uv-managed interpreter is found, subsequent repository scripts execute the returned interpreter path directly, bypassing a broken PATH `python.exe` shim/trampoline. If no working interpreter can be executed, bootstrap returns `BLOCKED`, persists the evidence, and the workflow stops before any Massive provider call. It never installs or repairs Python automatically.
 
@@ -37,6 +47,17 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\control_plane\run_
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\control_plane\run_python.ps1 `
   -RuntimeFile $Runtime `
   .\scripts\control_plane\discover_run.py 2026-09-28-eod
+```
+
+On Linux, use the same descriptor for every stage:
+
+```bash
+scripts/control_plane/run_python.sh --runtime-file "$runtime" \
+  scripts/control_plane/preflight.py \
+  --run-id 2026-09-28-eod \
+  --attempt-id "$attempt" \
+  --research-cutoff 2026-09-28T23:59:59Z \
+  --out "research/runs/$attempt.preflight.json"
 ```
 
 Never overwrite a prior terminal attempt. Git availability is informative rather than a market-data gate.
@@ -182,3 +203,7 @@ Do not use direct REST/HTTP clients, curl, requests/httpx, Massive/Polygon SDKs,
 ## Windows runtime bootstrap hardening
 
 On Windows, provider acquisition is downstream of a Python-independent PowerShell bootstrap. Repository paths resolve from the active project root, never the installed Skill directory. The resolver records every candidate outcome, checks repo virtualenv/Windows registry/common installs/uv/PATH, rebinds launchers to the actual interpreter executable, and may provision only a repository-local CPython under `.runtime/python` via uv. No system PATH mutation or global Python installation is permitted. Massive calls remain forbidden until Python >=3.11 executes successfully and the runtime descriptor is persisted.
+
+## Linux runtime bootstrap hardening
+
+On Linux/Codex Cloud, provider acquisition is downstream of the Python-independent Bash bootstrap. The resolver checks the attempt-bound descriptor, repo virtualenvs, versioned commands, pyenv, uv-managed installs, PATH, and uv discovery, recording every result and rebinding shims to `sys.executable`. `run_python.sh` revalidates the descriptor's concrete executable and never falls back to another interpreter. Bounded repair uses only the configured repository `.runtime/python` directory; a failed binding is BLOCKED and permits no Massive calls.

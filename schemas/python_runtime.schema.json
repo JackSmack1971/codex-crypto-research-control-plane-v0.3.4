@@ -9,6 +9,7 @@
     "reason": {"type": "string"},
     "checked_at": {"type": "string", "format": "date-time"},
     "minimum_version": {"type": "string"},
+    "platform": {"enum": ["windows", "linux"]},
     "mode": {"type": "string"},
     "source": {"type": "string"},
     "executable": {"type": "string"},
