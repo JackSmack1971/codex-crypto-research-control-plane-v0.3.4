@@ -1,0 +1,4 @@
+interface:
+  display_name: "OOS Scorekeeping"
+  short_description: "Score a matured frozen forecast out of sample"
+  default_prompt: "Use $oos-scorekeeping to score this matured frozen forecast against realized outcomes."

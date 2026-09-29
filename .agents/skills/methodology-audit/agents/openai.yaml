@@ -1,0 +1,4 @@
+interface:
+  display_name: "Methodology Audit"
+  short_description: "Adversarially audit research methodology and evidence"
+  default_prompt: "Use $methodology-audit to audit this completed candidate or daily run for methodological validity."

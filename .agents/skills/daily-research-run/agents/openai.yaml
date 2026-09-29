@@ -1,0 +1,4 @@
+interface:
+  display_name: "Daily Research Run"
+  short_description: "Govern one EOD run through an immutable forecast"
+  default_prompt: "Use $daily-research-run to complete one governed end-of-day research cycle and freeze the forecast."

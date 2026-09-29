@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "run_id", "attempt_id", "status", "research_cutoff", "eligible_assets",
+    "history_qualified_assets", "market_state", "macro_coverage", "artifacts", "limitations"
+  ],
+  "properties": {
+    "run_id": {"type": "string"},
+    "attempt_id": {"type": "string"},
+    "status": {"enum": ["COMPLETE", "DEGRADED", "BLOCKED"]},
+    "research_cutoff": {"type": "string", "format": "date-time"},
+    "eligible_assets": {"type": "integer", "minimum": 0},
+    "history_qualified_assets": {"type": "integer", "minimum": 0},
+    "market_state": {"enum": ["RISK_ON", "TRANSITION", "RISK_OFF", "UNAVAILABLE"]},
+    "macro_coverage": {"enum": ["COMPLETE", "DEGRADED", "UNAVAILABLE"]},
+    "artifacts": {"type": "object"},
+    "limitations": {"type": "array", "items": {"type": "string"}}
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "hypothesis_id": "residual-momentum-v1",
+  "created_at": "2026-09-28T20:00:00-04:00",
+  "question": "Does 60-day residual momentum predict 5-day cross-sectional crypto returns?",
+  "economic_rationale": "Persistent idiosyncratic strength may contain information beyond broad BTC/ETH market exposure.",
+  "signal_definition": "Rank eligible assets by 60-day cumulative residual return from the registered BTC/ETH/market factor model.",
+  "universe": "Top 50 eligible USD-quoted crypto assets by trailing 30-day median dollar-volume proxy.",
+  "primary_metric": "Spearman information coefficient versus forward 5-day excess return",
+  "expected_sign": "positive",
+  "test_period": {
+    "start": "2025-01-01",
+    "end": "2026-09-27"
+  },
+  "multiple_testing_family": "residual-momentum-v1",
+  "status": "REGISTERED",
+  "notes": "Illustrative only."
+}

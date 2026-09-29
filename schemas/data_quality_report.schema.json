@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "DataQualityReport",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "run_id",
+    "status",
+    "cutoff",
+    "datasets",
+    "findings"
+  ],
+  "properties": {
+    "run_id": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "PASS",
+        "DEGRADED",
+        "BLOCK"
+      ]
+    },
+    "cutoff": {
+      "type": "string"
+    },
+    "datasets": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://artofficialintelligence.academy/schemas/python_runtime.schema.json",
+  "title": "Governed Python Runtime Resolution",
+  "type": "object",
+  "required": ["status", "checked_at", "probes"],
+  "properties": {
+    "status": {"enum": ["READY", "BLOCKED"]},
+    "reason": {"type": "string"},
+    "checked_at": {"type": "string", "format": "date-time"},
+    "minimum_version": {"type": "string"},
+    "mode": {"type": "string"},
+    "source": {"type": "string"},
+    "executable": {"type": "string"},
+    "resolved_executable": {"type": "string"},
+    "prefix": {"type": "array", "items": {"type": "string"}},
+    "version": {"type": "string"},
+    "provisioned_repo_runtime": {"type": "boolean"},
+    "repo_local_provision_allowed": {"type": "boolean"},
+    "provisioning_attempted": {"type": "boolean"},
+    "provisioning": {"type": "array", "items": {"type": "object"}},
+    "probes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["source", "candidate", "status", "detail"],
+        "properties": {
+          "source": {"type": "string"},
+          "candidate": {"type": "string"},
+          "status": {"enum": ["READY", "FAILED", "NOT_FOUND", "TOO_OLD"]},
+          "detail": {"type": "string"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "remediation": {"type": "array", "items": {"type": "string"}}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"status": {"const": "READY"}}},
+      "then": {
+        "required": ["mode", "source", "executable", "resolved_executable", "prefix", "version", "provisioned_repo_runtime", "provisioning"]
+      }
+    },
+    {
+      "if": {"properties": {"status": {"const": "BLOCKED"}}},
+      "then": {
+        "required": ["reason", "minimum_version", "repo_local_provision_allowed", "provisioning_attempted", "provisioning", "remediation"]
+      }
+    }
+  ],
+  "additionalProperties": false
+}

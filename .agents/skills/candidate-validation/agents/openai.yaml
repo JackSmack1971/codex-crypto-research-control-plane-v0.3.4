@@ -1,0 +1,4 @@
+interface:
+  display_name: "Candidate Validation"
+  short_description: "Independently validate one researched signal candidate"
+  default_prompt: "Use $candidate-validation to independently validate an already-researched signal candidate."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Factor Research"
+  short_description: "Research one preregistered factor hypothesis"
+  default_prompt: "Use $factor-research to investigate a preregistered factor hypothesis and produce candidate evidence."

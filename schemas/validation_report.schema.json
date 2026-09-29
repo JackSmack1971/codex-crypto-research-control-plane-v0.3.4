@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ValidationReport",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "candidate_id",
+    "hypothesis_id",
+    "validator",
+    "verdict",
+    "checks",
+    "evidence"
+  ],
+  "properties": {
+    "candidate_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "hypothesis_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "validator": {
+      "type": "string",
+      "const": "statistical-validator"
+    },
+    "verdict": {
+      "enum": [
+        "PROMOTE",
+        "REJECT",
+        "INCONCLUSIVE",
+        "INVALID_EXPERIMENT"
+      ]
+    },
+    "checks": {
+      "type": "object",
+      "required": [
+        "chronology",
+        "leakage",
+        "multiple_testing",
+        "uncertainty",
+        "turnover",
+        "cost_scenarios",
+        "oos",
+        "parameter_stability",
+        "regime_dependence"
+      ],
+      "properties": {
+        "chronology": {
+          "type": "boolean"
+        },
+        "leakage": {
+          "type": "boolean"
+        },
+        "multiple_testing": {
+          "type": "boolean"
+        },
+        "uncertainty": {
+          "type": "boolean"
+        },
+        "turnover": {
+          "type": "boolean"
+        },
+        "cost_scenarios": {
+          "type": "boolean"
+        },
+        "oos": {
+          "type": "boolean"
+        },
+        "parameter_stability": {
+          "type": "boolean"
+        },
+        "regime_dependence": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    }
+  }
+}

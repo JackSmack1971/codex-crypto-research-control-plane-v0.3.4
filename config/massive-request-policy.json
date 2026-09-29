@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "covered_operation": "call_api",
+  "max_requests_per_window": 5,
+  "window_seconds": 60,
+  "minimum_interval_seconds": 12.0,
+  "halt_on_rate_limit_warning": true,
+  "rate_limit_recovery": "NEW_ATTEMPT_REQUIRED",
+  "notes": [
+    "This governs provider-facing Massive MCP call_api operations. search_endpoints, workspace, and query_data are control/local workspace operations and do not consume this provider request budget.",
+    "A RATE_LIMIT warning taints the attempt; successful retries do not restore acquisition-process compliance."
+  ]
+}

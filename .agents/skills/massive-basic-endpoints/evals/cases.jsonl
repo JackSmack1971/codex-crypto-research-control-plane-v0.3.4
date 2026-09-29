@@ -1,0 +1,65 @@
+{"id": "rp01", "kind": "routing_positive", "prompt": "Which Massive Basic endpoint gives BTC/USD custom bars?", "expected_activation": true}
+{"id": "rp02", "kind": "routing_positive", "prompt": "On Massive Basic, what endpoint should I use for the previous day of AAPL?", "expected_activation": true}
+{"id": "rp03", "kind": "routing_positive", "prompt": "I only have the Massive Basic plan. How do I get option contract metadata?", "expected_activation": true}
+{"id": "rp04", "kind": "routing_positive", "prompt": "Which Basic-plan endpoint returns upcoming market holidays?", "expected_activation": true}
+{"id": "rp05", "kind": "routing_positive", "prompt": "Can Basic give me the RSI endpoint for an index?", "expected_activation": true}
+{"id": "rp06", "kind": "routing_positive", "prompt": "Route a Basic-plan forex daily market summary request.", "expected_activation": true}
+{"id": "rp07", "kind": "routing_positive", "prompt": "I need the Massive Basic endpoint for futures trading schedules.", "expected_activation": true}
+{"id": "rp08", "kind": "routing_positive", "prompt": "On Basic, which macro endpoint has Treasury yields?", "expected_activation": true}
+{"id": "rp09", "kind": "routing_positive", "prompt": "What Basic endpoint should I use for SEC Form 4 insider changes?", "expected_activation": true}
+{"id": "rp10", "kind": "routing_positive", "prompt": "Does the Basic snapshot include a stock short-interest endpoint?", "expected_activation": true}
+{"id": "rp11", "kind": "routing_positive", "prompt": "Give me the Basic endpoint and history limit for crypto SMA.", "expected_activation": true}
+{"id": "rp12", "kind": "routing_positive", "prompt": "Which endpoint in the Basic snapshot lists all supported forex tickers?", "expected_activation": true}
+{"id": "rp13", "kind": "routing_positive", "prompt": "For Massive Basic, what endpoint handles stock splits?", "expected_activation": true}
+{"id": "rp14", "kind": "routing_positive", "prompt": "Find the Basic endpoint for 10-K business and risk-factor sections.", "expected_activation": true}
+{"id": "rp15", "kind": "routing_positive", "prompt": "Which Basic futures endpoint exposes product specifications?", "expected_activation": true}
+{"id": "rp16", "kind": "routing_positive", "prompt": "What Massive Basic endpoint provides inflation expectations?", "expected_activation": true}
+{"id": "rp17", "kind": "routing_positive", "prompt": "I need the exact Basic path for an option's previous-day OHLC.", "expected_activation": true}
+{"id": "rp18", "kind": "routing_positive", "prompt": "What does the Basic snapshot say for index custom bars and history?", "expected_activation": true}
+{"id": "rp19", "kind": "routing_positive", "prompt": "Which Basic endpoint lists stock exchange metadata?", "expected_activation": true}
+{"id": "rp20", "kind": "routing_positive", "prompt": "Use the Massive Basic catalog to route crypto market status.", "expected_activation": true}
+{"id": "rn01", "kind": "routing_negative", "prompt": "Analyze BTC trend and give me a trade thesis.", "expected_activation": false}
+{"id": "rn02", "kind": "routing_negative", "prompt": "Fetch today's AAPL price from Massive.", "expected_activation": false}
+{"id": "rn03", "kind": "routing_negative", "prompt": "Explain what RSI means.", "expected_activation": false}
+{"id": "rn04", "kind": "routing_negative", "prompt": "Write Python code to call a REST API.", "expected_activation": false}
+{"id": "rn05", "kind": "routing_negative", "prompt": "Compare Polygon and Massive pricing.", "expected_activation": false}
+{"id": "rn06", "kind": "routing_negative", "prompt": "What is the current Fed funds rate?", "expected_activation": false}
+{"id": "rn07", "kind": "routing_negative", "prompt": "Find the latest SEC filing for NVDA.", "expected_activation": false}
+{"id": "rn08", "kind": "routing_negative", "prompt": "Build a crypto dashboard using live market data.", "expected_activation": false}
+{"id": "rn09", "kind": "routing_negative", "prompt": "How do I authenticate to Massive?", "expected_activation": false}
+{"id": "rn10", "kind": "routing_negative", "prompt": "What are Massive WebSocket channels for stocks?", "expected_activation": false}
+{"id": "rn11", "kind": "routing_negative", "prompt": "Design a backtest for SPY.", "expected_activation": false}
+{"id": "rn12", "kind": "routing_negative", "prompt": "Calculate a 20-day SMA from these prices.", "expected_activation": false}
+{"id": "rn13", "kind": "routing_negative", "prompt": "Tell me whether the market is open right now.", "expected_activation": false}
+{"id": "rn14", "kind": "routing_negative", "prompt": "What does OHLC stand for?", "expected_activation": false}
+{"id": "rn15", "kind": "routing_negative", "prompt": "Create a database schema for market data.", "expected_activation": false}
+{"id": "rn16", "kind": "routing_negative", "prompt": "Find all available Massive Business-plan endpoints.", "expected_activation": false}
+{"id": "rn17", "kind": "routing_negative", "prompt": "How should I paginate a Massive API response?", "expected_activation": false}
+{"id": "rn18", "kind": "routing_negative", "prompt": "Explain option greeks.", "expected_activation": false}
+{"id": "rn19", "kind": "routing_negative", "prompt": "Summarize the latest macro data.", "expected_activation": false}
+{"id": "rn20", "kind": "routing_negative", "prompt": "Which stocks have the highest short interest today?", "expected_activation": false}
+{"id": "ra01", "kind": "routing_neighbor", "prompt": "I use Massive; which endpoint returns BTC bars?", "expected_activation": false, "note": "No Basic-plan constraint or snapshot-boundary request."}
+{"id": "ra02", "kind": "routing_neighbor", "prompt": "I have the free Massive plan. Which stock bar endpoint can I use?", "expected_activation": true, "note": "Free plan plausibly means Basic; route but state snapshot date."}
+{"id": "ra03", "kind": "routing_neighbor", "prompt": "Is /v3/snapshot included in Massive Basic today?", "expected_activation": true, "note": "Current Basic eligibility question; use snapshot then require live verification."}
+{"id": "ra04", "kind": "routing_neighbor", "prompt": "Show me all Massive options endpoints.", "expected_activation": false, "note": "Broad catalog request is not constrained to Basic."}
+{"id": "ra05", "kind": "routing_neighbor", "prompt": "Does Massive Basic support WebSockets for crypto?", "expected_activation": false, "note": "Skill scope is REST endpoints only."}
+{"id": "ra06", "kind": "routing_neighbor", "prompt": "What query parameters does the Basic stock aggregates endpoint accept?", "expected_activation": true, "note": "Route endpoint, then escalate parameter details to current docs."}
+{"id": "ra07", "kind": "routing_neighbor", "prompt": "Call the Massive crypto aggregates endpoint for me.", "expected_activation": false, "note": "Pure live retrieval with no Basic-plan boundary is outside routing scope."}
+{"id": "ra08", "kind": "routing_neighbor", "prompt": "I need two years of index history on Massive Basic.", "expected_activation": true, "note": "Basic history-boundary question."}
+{"id": "ra09", "kind": "routing_neighbor", "prompt": "Which Massive plan do I need for real-time option trades?", "expected_activation": false, "note": "Plan comparison beyond the captured Basic included-endpoint snapshot."}
+{"id": "ra10", "kind": "routing_neighbor", "prompt": "The Basic catalog has two dividend paths—what should I use?", "expected_activation": true, "note": "Deprecated/current-path selection is a skill decision."}
+{"id": "task01", "kind": "task", "prompt": "On Basic, give me BTC/USD range bars for a date interval.", "expected": {"market": "crypto", "capability": "Custom Bars (OHLC)", "path": "/v2/aggs/ticker/{cryptoTicker}/range/{multiplier}/{timespan}/{from}/{to}", "must_report_basic_limit": true}}
+{"id": "task02", "kind": "task", "prompt": "I need one day's opening and closing prices for an option contract on Basic.", "expected": {"market": "options", "capability": "Daily Ticker Summary (OHLC)", "path": "/v1/open-close/{optionsTicker}/{date}", "must_report_basic_limit": true}}
+{"id": "task03", "kind": "task", "prompt": "Find the Basic endpoint for all institutional 13-F holdings filings.", "expected": {"market": "stocks", "capability": "13-F Filings", "path": "/stocks/filings/vX/13-F", "must_report_basic_limit": true}}
+{"id": "task04", "kind": "task", "prompt": "Which Basic endpoint tells me current futures product market status?", "expected": {"market": "futures", "capability": "Market Status", "path": "/futures/v1/market-status", "must_report_basic_limit": true}}
+{"id": "task05", "kind": "task", "prompt": "I need U.S. inflation expectations from the Basic macro catalog.", "expected": {"market": "economy", "capability": "Inflation Expectations", "path": "/fed/v1/inflation-expectations", "must_report_basic_limit": true}}
+{"id": "task06", "kind": "task", "prompt": "Which Basic path lists all supported indices tickers?", "expected": {"market": "indices", "capability": "All Tickers", "path": "/v3/reference/tickers", "must_report_basic_limit": true}}
+{"id": "task07", "kind": "task", "prompt": "Route a Basic request for the prior-day forex OHLC bar.", "expected": {"market": "forex", "capability": "Previous Day Bar (OHLC)", "path": "/v2/aggs/ticker/{forexTicker}/prev", "must_report_basic_limit": true}}
+{"id": "task08", "kind": "task", "prompt": "Which endpoint should I use for stock insider ownership changes on Basic?", "expected": {"market": "stocks", "capability": "Form 4", "path": "/stocks/filings/vX/form-4", "must_report_basic_limit": true}}
+{"id": "task09", "kind": "task", "prompt": "I need Basic futures contract specifications.", "expected": {"market": "futures", "capability": "Contracts", "path": "/futures/v1/contracts", "must_report_basic_limit": true}}
+{"id": "task10", "kind": "task", "prompt": "Give me the Basic path for crypto RSI.", "expected": {"market": "crypto", "capability": "Relative Strength Index (RSI)", "path": "/v1/indicators/rsi/{cryptoTicker}", "must_report_basic_limit": true}}
+{"id": "fail01", "kind": "failure", "prompt": "Is this unlisted Massive endpoint included on Basic: GET /v9/magic/data?", "expected": "Report snapshot inconclusive; do not infer inclusion or exclusion."}
+{"id": "fail02", "kind": "failure", "prompt": "Use the Basic futures aggregate endpoint but tell me whether 8-hour historical means only 8 hours of history.", "expected": "Preserve both '8-hour historical' recency and 'history 2 years'; do not reconcile by assumption; use current docs if resolution is needed."}
+{"id": "fail03", "kind": "failure", "prompt": "Give me the exact limit and cursor pagination parameters for the Basic crypto bars endpoint.", "expected": "Route the endpoint, then verify current docs because parameters/pagination are not represented in the snapshot."}
+{"id": "fail04", "kind": "failure", "prompt": "The Basic endpoint catalog says dividends. Use whichever dividend URL you see first.", "expected": "Prefer the non-deprecated dividends endpoint; do not blindly choose the deprecated path."}
+{"id": "fail05", "kind": "failure", "prompt": "Which Basic freshness limit applies to /v3/reference/tickers?", "expected": "Require market disambiguation because the same path has market-specific snapshot limits."}

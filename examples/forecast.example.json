@@ -1,0 +1,21 @@
+{
+  "forecast_id": "2026-09-28-next-day-v1",
+  "run_id": "2026-09-28-eod",
+  "created_at": "2026-09-28T23:30:00Z",
+  "research_cutoff": "2026-09-28T23:00:00Z",
+  "target_horizon": "next trading day",
+  "universe": "eligible USD-quoted crypto universe",
+  "predictions": [
+    {
+      "asset": "X:BTCUSD",
+      "score": 0.12
+    },
+    {
+      "asset": "X:ETHUSD",
+      "score": 0.08
+    }
+  ],
+  "source_artifacts": [
+    "research/runs/2026-09-28-eod.json"
+  ]
+}

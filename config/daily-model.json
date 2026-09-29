@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "eligible_top_n": 25,
+  "history_lookback_calendar_days": 120,
+  "minimum_history_observations": 60,
+  "factor_weights": {
+    "relative_momentum": 0.30,
+    "trend_quality": 0.20,
+    "residual_momentum": 0.20,
+    "liquidity": 0.15,
+    "volatility_quality": 0.15
+  },
+  "regime_gross_multipliers": {
+    "RISK_ON": 1.0,
+    "TRANSITION": 0.65,
+    "RISK_OFF": 0.30
+  },
+  "research_gross_target": 0.50,
+  "max_research_weight": 0.10,
+  "excluded_usd_pairs": [
+    "X:USDTUSD",
+    "X:USDCUSD",
+    "X:DAIUSD",
+    "X:TUSDUSD",
+    "X:FDUSDUSD"
+  ]
+}

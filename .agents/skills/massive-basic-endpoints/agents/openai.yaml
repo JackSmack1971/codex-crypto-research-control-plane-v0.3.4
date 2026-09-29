@@ -1,0 +1,4 @@
+interface:
+  display_name: "Massive Basic Entitlements"
+  short_description: "Guard Massive Basic-plan capability boundaries"
+  default_prompt: "Use $massive-basic-endpoints to classify the dated Basic snapshot, preserve its limit, and hand live/current verification to $massive-mcp-data-plane."

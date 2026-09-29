@@ -1,0 +1,50 @@
+{"id": "P01", "kind": "positive", "prompt": "Run today's governed end-of-day crypto research cycle and freeze the forecast once the audit passes.", "expected_skill": "daily-research-run"}
+{"id": "P02", "kind": "positive", "prompt": "Complete the daily signal run from the data-quality gate through the immutable forecast artifact.", "expected_skill": "daily-research-run"}
+{"id": "P03", "kind": "positive", "prompt": "Do the EOD research run for 2026-09-28 using the control-plane topology and produce the frozen next-horizon forecast.", "expected_skill": "daily-research-run"}
+{"id": "P04", "kind": "positive", "prompt": "I want the full daily research cycle, including the data steward, parallel analysis, risk review, audit, and forecast freeze.", "expected_skill": "daily-research-run"}
+{"id": "P05", "kind": "positive", "prompt": "Research the preregistered residual-momentum-v2 hypothesis and produce candidate evidence, but do not validate it yet.", "expected_skill": "factor-research"}
+{"id": "P06", "kind": "positive", "prompt": "Investigate hypothesis h17 as a factor research task and keep every parameter variant in the record.", "expected_skill": "factor-research"}
+{"id": "P07", "kind": "positive", "prompt": "Develop a candidate from this already-registered cross-sectional signal hypothesis without changing the preregistration.", "expected_skill": "factor-research"}
+{"id": "P08", "kind": "positive", "prompt": "Run the discovery stage for the registered factor idea and hand off an evidence-backed candidate when research is complete.", "expected_skill": "factor-research"}
+{"id": "P09", "kind": "positive", "prompt": "This candidate has finished research. Independently validate it before any promotion decision.", "expected_skill": "candidate-validation"}
+{"id": "P10", "kind": "positive", "prompt": "Run the statistical validation stage on candidate c42 and return PROMOTE, REJECT, INCONCLUSIVE, or INVALID_EXPERIMENT.", "expected_skill": "candidate-validation"}
+{"id": "P11", "kind": "positive", "prompt": "Check the researched signal for chronology, leakage, multiple testing, robustness, costs, and OOS evidence using an independent validator.", "expected_skill": "candidate-validation"}
+{"id": "P12", "kind": "positive", "prompt": "Validate this completed factor candidate against its preregistered hypothesis; do not promote it.", "expected_skill": "candidate-validation"}
+{"id": "P13", "kind": "positive", "prompt": "Adversarially audit this completed candidate after validation and look for reasons the conclusion should not be trusted.", "expected_skill": "methodology-audit"}
+{"id": "P14", "kind": "positive", "prompt": "Perform the final methodology audit on today's completed research run and return PASS, FAIL, or INCONCLUSIVE.", "expected_skill": "methodology-audit"}
+{"id": "P15", "kind": "positive", "prompt": "Review this validated candidate for post-selection inference, lookahead, cost optimism, and unsupported claims.", "expected_skill": "methodology-audit"}
+{"id": "P16", "kind": "positive", "prompt": "Run a fresh methodology audit on the finished evidence package without modifying the artifacts.", "expected_skill": "methodology-audit"}
+{"id": "P17", "kind": "positive", "prompt": "The forecast horizon has matured. Score the frozen forecast against realized outcomes without rewriting it.", "expected_skill": "oos-scorekeeping"}
+{"id": "P18", "kind": "positive", "prompt": "Create the out-of-sample outcome record for this matured immutable forecast.", "expected_skill": "oos-scorekeeping"}
+{"id": "P19", "kind": "positive", "prompt": "Score last week's frozen predictions now that the realized data is available and preserve the original forecast bytes.", "expected_skill": "oos-scorekeeping"}
+{"id": "P20", "kind": "positive", "prompt": "Run OOS scorekeeping for forecast f101 using the repository's authoritative scorer and bind the result to the forecast digest.", "expected_skill": "oos-scorekeeping"}
+{"id": "N01", "kind": "negative", "prompt": "Explain what a momentum factor is in plain English.", "expected_skill": null}
+{"id": "N02", "kind": "negative", "prompt": "Summarize today's Bitcoin market news.", "expected_skill": null}
+{"id": "N03", "kind": "negative", "prompt": "Fetch the latest BTC price and tell me whether it is up today.", "expected_skill": null}
+{"id": "N04", "kind": "negative", "prompt": "Fix this Python type error in src/utils.py.", "expected_skill": null}
+{"id": "N05", "kind": "negative", "prompt": "Write a README section describing the project architecture.", "expected_skill": null}
+{"id": "N06", "kind": "negative", "prompt": "Create a new Git branch for my feature work.", "expected_skill": null}
+{"id": "N07", "kind": "negative", "prompt": "Review this pull request for code quality issues.", "expected_skill": null}
+{"id": "N08", "kind": "negative", "prompt": "Add unit tests for the JSON parser.", "expected_skill": null}
+{"id": "N09", "kind": "negative", "prompt": "Refactor the database access layer without changing behavior.", "expected_skill": null}
+{"id": "N10", "kind": "negative", "prompt": "Explain the difference between Spearman and Pearson correlation.", "expected_skill": null}
+{"id": "N11", "kind": "negative", "prompt": "Brainstorm five crypto factor ideas; do not test any of them.", "expected_skill": null}
+{"id": "N12", "kind": "negative", "prompt": "Show me the files under research/forecasts without scoring anything.", "expected_skill": null}
+{"id": "N13", "kind": "negative", "prompt": "Read this existing audit report and summarize its findings.", "expected_skill": null}
+{"id": "N14", "kind": "negative", "prompt": "Tell me what data sources this control plane supports.", "expected_skill": null}
+{"id": "N15", "kind": "negative", "prompt": "Update the color scheme in the dashboard.", "expected_skill": null}
+{"id": "N16", "kind": "negative", "prompt": "Check whether Codex is configured to use subagents.", "expected_skill": null}
+{"id": "N17", "kind": "negative", "prompt": "Generate a chart from this CSV.", "expected_skill": null}
+{"id": "N18", "kind": "negative", "prompt": "Calculate 17 divided by 4.", "expected_skill": null}
+{"id": "N19", "kind": "negative", "prompt": "Draft an email describing the research process.", "expected_skill": null}
+{"id": "N20", "kind": "negative", "prompt": "Search the repository for references to funding rates.", "expected_skill": null}
+{"id": "A01", "kind": "neighbor", "prompt": "I have a factor idea but it has not been preregistered. Start testing it now.", "expected_skill": null, "note": "factor-research requires a registered hypothesis"}
+{"id": "A02", "kind": "neighbor", "prompt": "Candidate c7 is already researched; do the independent statistical review now, not more factor exploration.", "expected_skill": "candidate-validation", "note": "validation, not factor-research"}
+{"id": "A03", "kind": "neighbor", "prompt": "The statistical validator already returned PROMOTE. Now challenge the methodology before any state transition.", "expected_skill": "methodology-audit", "note": "audit follows validation"}
+{"id": "A04", "kind": "neighbor", "prompt": "The methodology audit passed. Write the promotion record for candidate c7.", "expected_skill": null, "note": "promotion is deterministic state transition, not a skill workflow"}
+{"id": "A05", "kind": "neighbor", "prompt": "Run only the data-quality inspection for today's dataset and stop before the analytical agents.", "expected_skill": null, "note": "data-steward agent task, not full daily skill"}
+{"id": "A06", "kind": "neighbor", "prompt": "Run the full EOD cycle; if data quality passes, continue all the way to the forecast freeze.", "expected_skill": "daily-research-run", "note": "full daily workflow"}
+{"id": "A07", "kind": "neighbor", "prompt": "The forecast is still for tomorrow. Evaluate how accurate it was anyway.", "expected_skill": null, "note": "OOS scorekeeping must wait for maturity"}
+{"id": "A08", "kind": "neighbor", "prompt": "Yesterday's forecast matured overnight; score it now but do not generate a new forecast.", "expected_skill": "oos-scorekeeping", "note": "matured forecast scoring"}
+{"id": "A09", "kind": "neighbor", "prompt": "Audit whether the candidate violated the data-capability boundary, but do not rerun its statistical validation.", "expected_skill": "methodology-audit", "note": "methodology audit boundary"}
+{"id": "A10", "kind": "neighbor", "prompt": "Research this preregistered hypothesis only through candidate evidence; I will validate it in a separate run.", "expected_skill": "factor-research", "note": "research stage only"}

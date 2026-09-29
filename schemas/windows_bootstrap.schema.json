@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://artofficialintelligence.academy/schemas/windows_bootstrap.schema.json",
+  "title": "Windows Bootstrap Record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "run_id",
+    "attempt_id",
+    "created_at",
+    "research_cutoff",
+    "status",
+    "checks",
+    "errors",
+    "warnings",
+    "python_runtime_file",
+    "source_version",
+    "control_plane_manifest_digest"
+  ],
+  "properties": {
+    "run_id": {"type": "string", "minLength": 1},
+    "attempt_id": {"type": "string", "minLength": 1},
+    "created_at": {"type": "string", "format": "date-time"},
+    "research_cutoff": {"type": "string", "format": "date-time"},
+    "status": {"enum": ["READY", "BLOCKED"]},
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["check", "status"],
+        "properties": {
+          "check": {"type": "string"},
+          "status": {"enum": ["PASS", "WARN", "FAIL"]},
+          "detail": {}
+        },
+        "additionalProperties": true
+      }
+    },
+    "errors": {"type": "array", "items": {"type": "string"}},
+    "warnings": {"type": "array", "items": {"type": "string"}},
+    "python_runtime_file": {"type": "string", "minLength": 1},
+    "source_version": {"type": ["string", "null"]},
+    "control_plane_manifest_digest": {
+      "type": ["string", "null"],
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    }
+  }
+}

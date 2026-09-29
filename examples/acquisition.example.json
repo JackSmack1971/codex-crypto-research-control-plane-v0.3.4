@@ -1,0 +1,43 @@
+{
+  "acquisition_id": "acq-2026-09-28-eod-attempt-001",
+  "run_id": "2026-09-28-eod",
+  "attempt_id": "2026-09-28-eod-attempt-001",
+  "created_at": "2026-09-29T00:10:00Z",
+  "research_cutoff": "2026-09-28T23:59:59Z",
+  "source": "massive_mcp",
+  "server_url": "https://mcp.massive.com/",
+  "status": "COMPLETE",
+  "workspace_label": "2026-09-28-eod-attempt-001",
+  "probe_report_path": "research/runs/2026-09-28-eod-attempt-001.capability-probes.json",
+  "capability_evaluation_path": "research/runs/2026-09-28-eod-attempt-001.capability-evaluation.json",
+  "datasets": [
+    {
+      "dataset_id": "crypto_grouped_cutoff",
+      "capability_id": "crypto_grouped_eod",
+      "requirement": "CORE",
+      "market": "Crypto",
+      "purpose": "cutoff-day cross-section",
+      "method": "GET",
+      "endpoint_path": "/v2/aggs/grouped/locale/global/market/crypto/2026-09-28",
+      "params": {"adjusted": true},
+      "retrieved_at": "2026-09-29T00:02:03Z",
+      "retrieval_time_source": "CLIENT_CAPTURED",
+      "as_of": "2026-09-28",
+      "discovery_status": "VERIFIED",
+      "basic_snapshot_status": "INCLUDED",
+      "access_status": "SUCCEEDED",
+      "pagination_complete": true,
+      "row_count": 392,
+      "workspace_table": "crypto_grouped_cutoff",
+      "request_ids": [],
+      "materialization_status": "VERIFIED",
+      "materialized_path": "research/data/2026-09-28-eod-attempt-001/crypto_grouped_cutoff.jsonl",
+      "materialized_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "materialized_row_count": 392,
+      "status": "COMPLETE",
+      "notes": ["MCP response did not expose a server request id; exact client completion time recorded instead."]
+    }
+  ],
+  "errors": [],
+  "limitations": []
+}

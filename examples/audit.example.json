@@ -1,0 +1,12 @@
+{
+  "subject_type": "candidate",
+  "subject_id": "residual-momentum-v1-candidate-a",
+  "candidate_id": "residual-momentum-v1-candidate-a",
+  "hypothesis_id": "residual-momentum-v1",
+  "auditor": "methodology-auditor",
+  "status": "PASS",
+  "reason_codes": [],
+  "evidence": [
+    "research/audits/residual-momentum-v1-candidate-a.md"
+  ]
+}

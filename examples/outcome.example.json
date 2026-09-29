@@ -1,0 +1,13 @@
+{
+  "outcome_id": "2026-09-28-next-day-v1-outcome",
+  "forecast_id": "2026-09-28-next-day-v1",
+  "forecast_content_digest": "sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+  "scored_at": "2026-09-30T00:15:00Z",
+  "realized_through": "2026-09-29T23:59:59Z",
+  "metric_name": "registered_forecast_metric",
+  "metric_value": 0.0,
+  "n_observations": 2,
+  "source_artifacts": [
+    "research/outcomes/realized-2026-09-29.json"
+  ]
+}

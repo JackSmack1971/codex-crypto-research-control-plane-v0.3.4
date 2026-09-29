@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AgentHandoff",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "agent",
+    "run_id",
+    "status",
+    "summary",
+    "claims",
+    "evidence",
+    "warnings",
+    "uncertainty"
+  ],
+  "properties": {
+    "agent": {
+      "type": "string"
+    },
+    "run_id": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string"
+    },
+    "summary": {
+      "type": "string"
+    },
+    "claims": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "uncertainty": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

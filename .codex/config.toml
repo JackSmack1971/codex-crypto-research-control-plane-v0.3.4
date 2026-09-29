@@ -1,0 +1,10 @@
+# Project-level orchestration defaults.
+# Runtime permissions remain controlled by the parent/session permission profile.
+# The Massive server uses host-managed OAuth; do not add API keys to this repository.
+
+[agents]
+max_concurrent_threads_per_session = 6
+max_depth = 1
+
+[mcp_servers.massive]
+url = "https://mcp.massive.com/"

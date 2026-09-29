@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MassiveRequestLedger",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "run_id", "attempt_id", "created_at", "policy_path",
+    "policy_digest", "policy", "status", "tainted", "halt_required", "requests"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "run_id": {"type": "string", "minLength": 1},
+    "attempt_id": {"type": "string", "minLength": 1},
+    "created_at": {"type": "string", "format": "date-time"},
+    "policy_path": {"type": "string", "minLength": 1},
+    "policy_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["covered_operation", "max_requests_per_window", "window_seconds", "minimum_interval_seconds", "halt_on_rate_limit_warning", "rate_limit_recovery"],
+      "properties": {
+        "covered_operation": {"const": "call_api"},
+        "max_requests_per_window": {"type": "integer", "minimum": 1},
+        "window_seconds": {"type": "number", "exclusiveMinimum": 0},
+        "minimum_interval_seconds": {"type": "number", "minimum": 0},
+        "halt_on_rate_limit_warning": {"type": "boolean"},
+        "rate_limit_recovery": {"enum": ["NEW_ATTEMPT_REQUIRED"]}
+      }
+    },
+    "status": {"enum": ["OPEN", "TAINTED", "SEALED"]},
+    "tainted": {"type": "boolean"},
+    "halt_required": {"type": "boolean"},
+    "requests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "sequence", "permit_id", "operation", "label", "endpoint_path", "params_digest",
+          "permit_issued_at", "completed_at", "outcome", "warning", "request_id", "row_count",
+          "pagination_terminal", "next_url_present"
+        ],
+        "properties": {
+          "sequence": {"type": "integer", "minimum": 1},
+          "permit_id": {"type": "string", "minLength": 1},
+          "operation": {"const": "call_api"},
+          "label": {"type": "string", "minLength": 1},
+          "endpoint_path": {"type": "string", "pattern": "^/"},
+          "params_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+          "permit_issued_at": {"type": "string", "format": "date-time"},
+          "completed_at": {"type": ["string", "null"], "format": "date-time"},
+          "outcome": {"type": ["string", "null"], "enum": [null, "SUCCESS", "RATE_LIMIT", "NOT_ENTITLED", "ERROR"]},
+          "warning": {"type": ["string", "null"]},
+          "request_id": {"type": ["string", "null"]},
+          "row_count": {"type": ["integer", "null"], "minimum": 0},
+          "pagination_terminal": {"type": ["boolean", "null"]},
+          "next_url_present": {"type": ["boolean", "null"]}
+        }
+      }
+    },
+    "sealed_at": {"type": ["string", "null"], "format": "date-time"},
+    "content_digest": {"type": ["string", "null"], "pattern": "^sha256:[0-9a-f]{64}$"}
+  }
+}

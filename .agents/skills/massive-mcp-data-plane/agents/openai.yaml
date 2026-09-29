@@ -1,0 +1,13 @@
+interface:
+  display_name: "Massive MCP Data Plane"
+  short_description: "Acquire governed research data through Massive MCP"
+  default_prompt: "Use $massive-mcp-data-plane to acquire the required Massive data through MCP, enforce the Basic/cutoff boundary, and seal the acquisition manifest before downstream research."
+policy:
+  allow_implicit_invocation: false
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "massive"
+      description: "Massive market-data endpoint discovery, API execution, workspace storage, and SQL querying"
+      transport: "streamable_http"
+      url: "https://mcp.massive.com/"

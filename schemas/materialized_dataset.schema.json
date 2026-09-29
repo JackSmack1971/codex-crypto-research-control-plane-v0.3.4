@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "dataset_id", "run_id", "attempt_id", "market", "endpoint_path", "params",
+    "requirement", "research_cutoff", "retrieved_at", "as_of", "row_count",
+    "sort_fields", "key_fields", "data_path", "data_digest", "materialization_status"
+  ],
+  "properties": {
+    "dataset_id": {"type": "string", "minLength": 1},
+    "run_id": {"type": "string", "minLength": 1},
+    "attempt_id": {"type": "string", "minLength": 1},
+    "market": {"type": "string", "minLength": 1},
+    "endpoint_path": {"type": "string", "pattern": "^/"},
+    "params": {"type": "object"},
+    "requirement": {"enum": ["CORE", "ENRICHMENT", "EVENT_OPTIONAL"]},
+    "research_cutoff": {"type": "string", "format": "date-time"},
+    "retrieved_at": {"type": "string", "format": "date-time"},
+    "as_of": {"type": "string", "minLength": 1},
+    "row_count": {"type": "integer", "minimum": 0},
+    "sort_fields": {"type": "array", "items": {"type": "string"}},
+    "key_fields": {"type": "array", "items": {"type": "string"}},
+    "data_path": {"type": "string", "minLength": 1},
+    "data_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "source_chunks": {"type": "array", "items": {"type": "string"}},
+    "materialization_status": {"const": "VERIFIED"}
+  }
+}

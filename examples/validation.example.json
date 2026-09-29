@@ -1,0 +1,20 @@
+{
+  "candidate_id": "residual-momentum-v1-candidate-a",
+  "hypothesis_id": "residual-momentum-v1",
+  "validator": "statistical-validator",
+  "verdict": "PROMOTE",
+  "checks": {
+    "chronology": true,
+    "leakage": true,
+    "multiple_testing": true,
+    "uncertainty": true,
+    "turnover": true,
+    "cost_scenarios": true,
+    "oos": true,
+    "parameter_stability": true,
+    "regime_dependence": true
+  },
+  "evidence": [
+    "research/validations/residual-momentum-v1-candidate-a-details.json"
+  ]
+}

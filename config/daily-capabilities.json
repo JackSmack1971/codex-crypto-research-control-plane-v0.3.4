@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "policy": {
+    "CORE": "Any unresolved or denied core capability blocks the run.",
+    "ENRICHMENT": "Denied enrichment degrades coverage but does not block a valid crypto-core run.",
+    "EVENT_OPTIONAL": "Event-driven data is acquired when relevant and available; denial or absence is recorded without blocking the run."
+  },
+  "capabilities": [
+    {
+      "capability_id": "crypto_universe_pit",
+      "requirement": "CORE",
+      "market": "Crypto",
+      "purpose": "Point-in-time tradable universe and survivorship control",
+      "probe": {"kind": "reference", "query": "crypto all tickers point in time"}
+    },
+    {
+      "capability_id": "crypto_grouped_eod",
+      "requirement": "CORE",
+      "market": "Crypto",
+      "purpose": "Cutoff-day cross-section for breadth, liquidity, VWAP, and eligibility",
+      "probe": {"kind": "data", "query": "crypto daily market summary grouped OHLC"}
+    },
+    {
+      "capability_id": "crypto_history",
+      "requirement": "CORE",
+      "market": "Crypto",
+      "purpose": "Historical bars for momentum, volatility, beta, residual, and trend features",
+      "probe": {"kind": "data", "query": "crypto custom daily bars BTCUSD"}
+    },
+    {
+      "capability_id": "fx_history",
+      "requirement": "ENRICHMENT",
+      "market": "Forex",
+      "purpose": "Dollar/liquidity cross-asset regime proxy",
+      "probe": {"kind": "data", "query": "forex custom daily bars EURUSD"}
+    },
+    {
+      "capability_id": "stock_macro_proxies",
+      "requirement": "ENRICHMENT",
+      "market": "Stocks",
+      "purpose": "Equity risk, crypto-equity complex, and stock-regime context",
+      "probe": {"kind": "data", "query": "stock historical daily bars"}
+    },
+    {
+      "capability_id": "index_macro_proxies",
+      "requirement": "ENRICHMENT",
+      "market": "Indices",
+      "purpose": "Broad-equity, technology, and index regime context",
+      "probe": {"kind": "data", "query": "index historical daily bars SPX"}
+    },
+    {
+      "capability_id": "institutional_filings",
+      "requirement": "EVENT_OPTIONAL",
+      "market": "Stocks",
+      "purpose": "SEC and corporate-event intelligence when a governed event query is active",
+      "probe": {"kind": "event", "query": "SEC 8-K 10-K 13-F insider filings"}
+    },
+    {
+      "capability_id": "short_interest",
+      "requirement": "EVENT_OPTIONAL",
+      "market": "Stocks",
+      "purpose": "Crypto-equity short-pressure intelligence when available",
+      "probe": {"kind": "event", "query": "stock short interest short volume"}
+    },
+    {
+      "capability_id": "options_proxies",
+      "requirement": "EVENT_OPTIONAL",
+      "market": "Options",
+      "purpose": "EOD options risk-expectation proxies for selected crypto equities/ETFs",
+      "probe": {"kind": "event", "query": "historical option contracts and daily bars"}
+    }
+  ]
+}

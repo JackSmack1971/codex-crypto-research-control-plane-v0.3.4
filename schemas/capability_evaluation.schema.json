@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["run_id", "attempt_id", "status", "core_failures", "degradations", "optional_unavailable", "evaluated_capabilities"],
+  "properties": {
+    "run_id": {"type": "string"},
+    "attempt_id": {"type": "string"},
+    "status": {"enum": ["READY", "DEGRADED", "BLOCKED"]},
+    "core_failures": {"type": "array", "items": {"type": "string"}},
+    "degradations": {"type": "array", "items": {"type": "string"}},
+    "optional_unavailable": {"type": "array", "items": {"type": "string"}},
+    "evaluated_capabilities": {"type": "array", "items": {"type": "object"}}
+  }
+}
