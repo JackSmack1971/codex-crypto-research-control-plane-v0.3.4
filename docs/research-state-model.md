@@ -1,5 +1,14 @@
 # Research state model
 
+## Cross-environment replay evidence
+
+`LIVE_CAPTURE_REPLAY_MATCH` is a provider-free parity result over a sealed live
+run's durable post-acquisition boundary. It is neither
+`LIVE_PROVIDER_QUALIFIED` nor `LIVE_DAILY_RUN_PASS`, and cannot satisfy forecast
+freeze gates. Source request-ledger compliance, when identified by digest, is
+origin-run provenance only; replay provider compliance remains `NOT_TESTED` and
+the replay request count is mechanically zero.
+
 ## Candidate lifecycle
 
 ```text

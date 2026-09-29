@@ -18,6 +18,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from validate_artifact import validate as validate_schema  # noqa: E402
 
 FIXTURE_SCHEMA = ROOT / "schemas" / "replay_fixture.schema.json"
+BUNDLE_SCHEMA = ROOT / "schemas" / "live_replay_bundle.schema.json"
 MATERIALIZED_SCHEMA = ROOT / "schemas" / "materialized_dataset.schema.json"
 DQ_SCHEMA = ROOT / "schemas" / "data_quality_report.schema.json"
 CAPS_SCHEMA = ROOT / "schemas" / "capability_evaluation.schema.json"
@@ -34,6 +35,18 @@ def _digest(path: Path) -> str:
     return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def _semantic_artifact_digest(path: Path) -> str:
+    if path.name not in {"pipeline-result.json", "forecast-payload.json"}:
+        return _digest(path)
+    obj = _load(path)
+    if path.name == "pipeline-result.json":
+        obj["artifacts"] = {key: Path(value.replace("\\", "/")).name for key, value in obj["artifacts"].items()}
+    else:
+        obj["source_artifacts"] = [Path(value.replace("\\", "/")).name for value in obj["source_artifacts"]]
+    payload = json.dumps(obj, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+    return "sha256:" + hashlib.sha256(payload).hexdigest()
+
+
 def _resolve(base: Path, value: str) -> Path:
     path = (base / value).resolve()
     if base.resolve() not in path.parents:
@@ -45,6 +58,35 @@ def _schema_check(path: Path, schema_path: Path) -> None:
     errors = validate_schema(_load(path), _load(schema_path))
     if errors:
         raise ValueError(f"schema_invalid:{path.name}:" + ";".join(errors))
+
+
+def _bundle_digest(obj: dict[str, Any]) -> str:
+    unsigned = dict(obj)
+    unsigned.pop("bundle_digest", None)
+    payload = json.dumps(unsigned, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+    return "sha256:" + hashlib.sha256(payload).hexdigest()
+
+
+def _verify_bundle(path: Path) -> tuple[dict[str, Any], Path]:
+    manifest = path / "bundle.json" if path.is_dir() else path
+    _schema_check(manifest, BUNDLE_SCHEMA)
+    bundle = _load(manifest)
+    if bundle["source_provenance"] != "LIVE_CAPTURE":
+        raise ValueError("live_bundle_provenance_mismatch")
+    if _bundle_digest(bundle) != bundle["bundle_digest"]:
+        raise ValueError("bundle_digest_mismatch")
+    base = manifest.parent
+    declared = set()
+    for entry in bundle["inventory"]:
+        item = _resolve(base, entry["path"])
+        declared.add(entry["path"])
+        if item.is_symlink() or not item.is_file() or _digest(item) != entry["digest"] or item.stat().st_size != entry["size"]:
+            raise ValueError(f"bundle_inventory_mismatch:{entry['path']}")
+    referenced = {value for value in bundle["controls"].values()}
+    referenced.update(value for dataset in bundle["datasets"] for value in (dataset["data_path"], dataset["metadata_path"]))
+    if referenced != declared:
+        raise ValueError("bundle_inventory_reference_mismatch")
+    return bundle, base
 
 
 def _validate_dataset(base: Path, entry: dict[str, Any], fixture: dict[str, Any]) -> tuple[Path, dict[str, str]]:
@@ -87,20 +129,30 @@ def _source_identity() -> dict[str, Any]:
     return identity
 
 
-def qualify(fixture_path: Path, output: Path) -> int:
+def qualify(fixture_path: Path, output: Path, live_bundle: bool = False) -> int:
     stages: list[dict[str, str]] = []
     artifact_digests: dict[str, str] = {}
     fixture_digests: dict[str, Any] = {}
     status = "BLOCKED"
     fixture: dict[str, Any] = {}
-    limitation = "Massive MCP visibility, authentication, entitlement, effective capability probing, request-ledger compliance, and live acquisition were NOT tested."
+    limitation = "Provider access, authentication, entitlement, requests, and replay request compliance were NOT tested; replay made zero live provider requests."
     try:
-        _schema_check(fixture_path, FIXTURE_SCHEMA)
-        fixture = _load(fixture_path)
-        stages.append({"stage": "fixture_schema", "outcome": "PASS"})
-        base = fixture_path.parent
+        if live_bundle:
+            fixture, base = _verify_bundle(fixture_path)
+            stages.append({"stage": "live_bundle_schema_digest_inventory", "outcome": "PASS"})
+            fixture = dict(fixture)
+            fixture["data_quality"] = fixture["controls"]["data_quality"]
+            fixture["capability_evaluation"] = fixture["controls"]["capability_evaluation"]
+            fixture["provenance"] = "LIVE_CAPTURE"
+            fixture["fixture_id"] = fixture["bundle_id"]
+            fixture["fixture_version"] = fixture["bundle_schema_version"]
+        else:
+            _schema_check(fixture_path, FIXTURE_SCHEMA)
+            fixture = _load(fixture_path)
+            base = fixture_path.parent
+            stages.append({"stage": "fixture_schema", "outcome": "PASS"})
         paths: dict[str, Path] = {}
-        fixture_digests["manifest"] = _digest(fixture_path)
+        fixture_digests["manifest"] = fixture["bundle_digest"] if live_bundle else _digest(fixture_path)
         for entry in fixture["datasets"]:
             paths[entry["role"]], fixture_digests[entry["role"]] = _validate_dataset(base, entry, fixture)
         stages.append({"stage": "materialization_integrity_unique_keys_cutoff", "outcome": "PASS"})
@@ -117,7 +169,7 @@ def qualify(fixture_path: Path, output: Path) -> int:
                    "--run-id", fixture["run_id"], "--attempt-id", fixture["attempt_id"],
                    "--research-cutoff", fixture["research_cutoff"], "--crypto-universe", str(paths["crypto_universe"]),
                    "--crypto-cutoff", str(paths["crypto_cutoff"]), "--crypto-history", str(paths["crypto_history"]),
-                   "--data-quality", str(dq), "--capability-evaluation", str(caps), "--config", str(ROOT / "config" / "daily-model.json"),
+                   "--data-quality", str(dq), "--capability-evaluation", str(caps), "--config", str(_resolve(base, fixture["controls"]["model_config"]) if live_bundle else ROOT / "config" / "daily-model.json"),
                    "--created-at", fixture["created_at"], "--out-dir", "pipeline"]
             for role, flag in (("fx_history", "--fx-history"), ("stock_history", "--stock-history"), ("index_history", "--index-history")):
                 if role in paths:
@@ -129,24 +181,31 @@ def qualify(fixture_path: Path, output: Path) -> int:
             result = produced / "pipeline-result.json"
             _schema_check(result, PIPELINE_SCHEMA)
             for path in sorted(produced.iterdir()):
-                artifact_digests[path.name] = _digest(path)
+                artifact_digests[path.name] = _semantic_artifact_digest(path) if live_bundle else _digest(path)
             if artifact_digests != fixture["expected_pipeline_digests"]:
                 raise ValueError("pipeline_output_digest_mismatch")
         stages.append({"stage": "deterministic_daily_pipeline_and_schema", "outcome": "PASS"})
         stages.append({"stage": "research_risk_and_pre_freeze_payload", "outcome": "PASS"})
-        status = "PASS"
+        status = "LIVE_CAPTURE_REPLAY_MATCH" if live_bundle else "PASS"
     except (OSError, ValueError, KeyError, json.JSONDecodeError) as exc:
         stages.append({"stage": "qualification", "outcome": "BLOCKED", "detail": str(exc)})
+        if live_bundle and str(exc) == "pipeline_output_digest_mismatch":
+            status = "LIVE_CAPTURE_REPLAY_MISMATCH"
 
     result_obj = {
-        "qualification_mode": "OFFLINE_REPLAY", "status": status,
+        "qualification_mode": "LIVE_CAPTURE_REPLAY" if live_bundle else "OFFLINE_REPLAY", "status": status,
         "fixture": {"id": fixture.get("fixture_id", fixture_path.name), "version": fixture.get("fixture_version"), "provenance": fixture.get("provenance", "UNKNOWN")},
         "fixture_digests": fixture_digests, "control_plane_source": _source_identity(),
         "python_runtime": {"executable": sys.executable, "version": platform.python_version(), "implementation": platform.python_implementation(), "platform": platform.platform()},
         "stages": stages, "artifact_digests": artifact_digests,
+        "bundle_identity": fixture.get("bundle_id"), "bundle_digest": fixture.get("bundle_digest"),
+        "source_run_id": fixture.get("run_id"), "source_attempt_id": fixture.get("attempt_id"),
+        "source_artifact_digest": fixture.get("source_pipeline_result_digest"), "replay_artifact_digest": artifact_digests.get("pipeline-result.json"),
+        "artifact_comparisons": {name: ("MATCH" if artifact_digests.get(name) == expected else "MISMATCH") for name, expected in fixture.get("expected_pipeline_digests", {}).items()},
         "live_provider_qualified": False, "live_daily_run_pass": False,
+        "provider_access_in_replay": "NOT_TESTED", "provider_authentication_in_replay": "NOT_TESTED", "provider_entitlement_in_replay": "NOT_TESTED", "replay_provider_compliance": "NOT_TESTED", "live_provider_requests_in_replay": 0,
         "provider_checks": {key: "NOT_TESTED" for key in ("massive_mcp_visibility", "authentication", "entitlement", "effective_capability_probe", "live_request_ledger", "live_acquisition")},
-        "limitations": [limitation, "Synthetic fixed vectors cannot support claims about real market behavior."],
+        "limitations": [limitation] + ([] if live_bundle else ["Synthetic fixed vectors cannot support claims about real market behavior."]),
     }
     schema_errors = validate_schema(result_obj, _load(RESULT_SCHEMA))
     if schema_errors:
@@ -155,15 +214,17 @@ def qualify(fixture_path: Path, output: Path) -> int:
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(result_obj, indent=2, sort_keys=True) + "\n", encoding="utf-8", newline="\n")
     print(f"{status}:{output}")
-    return 0 if status == "PASS" else 1
+    return 0 if status in {"PASS", "LIVE_CAPTURE_REPLAY_MATCH"} else 1
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Qualify the deterministic post-acquisition workflow from a governed offline fixture; never performs provider calls.")
-    parser.add_argument("--fixture", type=Path, default=DEFAULT_FIXTURE)
+    source = parser.add_mutually_exclusive_group()
+    source.add_argument("--fixture", type=Path, default=DEFAULT_FIXTURE)
+    source.add_argument("--bundle", type=Path)
     parser.add_argument("--out", type=Path, default=ROOT / "research" / "qualifications" / "offline-replay.json")
     args = parser.parse_args()
-    return qualify(args.fixture.resolve(), args.out.resolve())
+    return qualify((args.bundle or args.fixture).resolve(), args.out.resolve(), args.bundle is not None)
 
 
 if __name__ == "__main__":

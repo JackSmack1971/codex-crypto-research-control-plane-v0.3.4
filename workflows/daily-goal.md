@@ -1,6 +1,6 @@
 # Daily `/goal`
 
-This workflow is the live provider path. Offline deterministic qualification uses `python3.12 -B scripts/control_plane/qualify_replay.py`; its `OFFLINE_REPLAY` artifact cannot satisfy any capability-probe, request-ledger, acquisition-provenance, methodology-audit, or forecast-freeze requirement below.
+This workflow is the live provider path. Offline deterministic qualification uses `python3.12 -B scripts/control_plane/qualify_replay.py`; its `OFFLINE_REPLAY` artifact cannot satisfy any capability-probe, request-ledger, acquisition-provenance, methodology-audit, or forecast-freeze requirement below. A post-run `LIVE_CAPTURE_REPLAY_MATCH` bundle likewise proves only cross-environment deterministic parity: copied source-ledger provenance never proves replay-side provider compliance and cannot satisfy a live-provider or forecast-freeze gate.
 
 Use one stable daily `run_id` and a fresh `attempt_id` for every retry.
 
